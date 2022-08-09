@@ -5,17 +5,15 @@ var ddbClient = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 exports.handler = async (event) => {
 
     var params = {
-        TableName: 'BlockCommentBlogMetadata',
-        Key: { 'articleId': {S:'001'}, 'publicationDate': {S: '2022-08-08'} } 
-
+        TableName: 'BlockCommentBlogMetadata'
     };
     console.log(JSON.stringify(params));
     try {
-        const data = await ddbClient.getItem(params).promise()
+        const data = await ddbClient.scan(params).promise();
         
         const response = {
             statusCode: 200,
-            body: JSON.stringify(data),
+            body: data.Items,
         };
         
         return response;
