@@ -4,8 +4,14 @@ var ddbClient = new AWS.DynamoDB({apiVersion: '2012-08-10'});
     
 exports.handler = async (event) => {
 
+    var tableName = 'BlockCommentBlogMetadataDevo';
+    if ('production' === process.env.ENVIRONMENT) {
+        tableName = 'BlockCommentBlogMetadata';
+    }
+
     var params = {
-        TableName: 'BlockCommentBlogMetadata'
+        TableName: tableName
+
     };
     console.log(JSON.stringify(params));
     try {
