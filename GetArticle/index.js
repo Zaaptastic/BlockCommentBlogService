@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     
     var params = {
         Bucket: bucketName,
-        Key: event.queryStringParameters.articleId + '.html'
+        Key: event.articleId + '.html'
     };
     
     try {
