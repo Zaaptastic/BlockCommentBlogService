@@ -5,16 +5,17 @@ var s3Client = new AWS.S3({apiVersion: '2012-08-10'});
 exports.handler = async (event) => {
     var params = {
         Bucket: 'block-comment-blog-articles',
-        Key: event.articleId + '.html'
+        Key: event.queryStringParameters.articleId + '.html'
     };
-    console.log(JSON.stringify(params));
     
     try {
         const data = await s3Client.getObject(params).promise();
         
         const response = {
             statusCode: 200,
-            body: data.Body.toString(),
+            body: {
+                "content": data.Body.toString()
+            },
         };
         
         return response;
