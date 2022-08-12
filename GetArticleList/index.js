@@ -10,16 +10,21 @@ exports.handler = async (event) => {
     }
 
     var params = {
-        TableName: tableName
-
+        TableName: tableName,
+        ExpressionAttributeValues: {
+            ':isVisible' : { S : 'true' },
+            ':publicationDate' : { S : new Date().toISOString() }
+        },
+        KeyConditionExpression: 'isVisible = :isVisible and publicationDate <= :publicationDate',
+        ScanIndexForward: false
     };
-    console.log(JSON.stringify(params));
+    
     try {
-        const data = await ddbClient.scan(params).promise();
+        const data = await ddbClient.query(params).promise();
         
         const response = {
             statusCode: 200,
-            body: data.Items,
+            body: data.Items
         };
         
         return response;
