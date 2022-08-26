@@ -12,6 +12,11 @@ exports.handler = async (event) => {
         tableName = 'BlockCommentBlogMetadata';
     }
     
+    var shouldSearchVisibleArticles = 'true';
+    if (event.shouldSearchInvisibleArticles === true) {
+        shouldSearchVisibleArticles = 'false';
+    }
+
     var s3Params = {
         Bucket: bucketName,
         Key: event.articleId + '.html'
@@ -19,7 +24,7 @@ exports.handler = async (event) => {
     var ddbParams = {
         TableName: tableName,
         ExpressionAttributeValues: {
-            ':isVisible' : { S : 'true' },
+            ':isVisible' : { S : shouldSearchVisibleArticles },
             ':publicationDate' : { S : new Date().toISOString() },
             ':articleId' : { S: event.articleId } 
         },
