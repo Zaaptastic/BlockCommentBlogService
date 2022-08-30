@@ -17,10 +17,6 @@ exports.handler = async (event) => {
         shouldSearchVisibleArticles = 'false';
     }
 
-    var s3Params = {
-        Bucket: bucketName,
-        Key: event.articleId + '.html'
-    };
     var ddbParams = {
         TableName: tableName,
         ExpressionAttributeValues: {
@@ -33,19 +29,32 @@ exports.handler = async (event) => {
     }
     
     try {
-        const s3Data = await s3Client.getObject(s3Params).promise();
+       
         const ddbData = await ddbClient.query(ddbParams).promise();
+
+        const ddbItem = ddbData.Items.shift();
+        var filetype = 'html';
+        if (ddbItem.filetype !== undefined) {
+            filetype = ddbItem.filetype.S;
+        } 
+        const s3Params = {
+            Bucket: bucketName,
+            Key: event.articleId + '.' + filetype
+        };
+
+        const s3Data = await s3Client.getObject(s3Params).promise();
         
         const response = {
             statusCode: 200,
             body: {
                 "content": s3Data.Body.toString(),
-                "metadata": ddbData.Items.shift()
+                "metadata": ddbItem
             }
         };
         
         return response;
     } catch (err) {
+        console.log(err);
         return err;
     }
 };
