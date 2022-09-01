@@ -59,7 +59,7 @@ It also currently requires no inputs, and will fetch all published items in orde
         {
             "isVisible": "true",
             "publicationDate": "2022-08-22T00:42:18Z",
-            "articleId": "an-olderarticle-id"
+            "articleId": "an-older-article-id"
         }
     ]
 }
